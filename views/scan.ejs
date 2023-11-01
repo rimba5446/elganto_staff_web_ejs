@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan QR Code</title>
+</head>
+<body>
+  <h1>Scan QR Code</h1>
+  <video id="qr-video" width="100%" autoplay></video>
+  <form id="qr-form" method="post" action="/validateQRCode">
+    <input type="text" name="qrData[TicketNumber]" id="qr-data-input" placeholder="QR Code akan muncul di sini setelah pemindaian">
+    <input type="number" name="visitorCount" placeholder="Jumlah Pengunjung">
+    <button type="submit">Validasi QR Code</button>
+  </form>
+
+  <script src="https://cdn.rawgit.com/schmich/instascan/v2.0.0/instascan.min.js"></script>
+  <script>
+    const videoElement = document.getElementById('qr-video');
+    const qrDataInput = document.getElementById('qr-data-input');
+
+    const scanner = new Instascan.Scanner({ video: videoElement });
+    scanner.addListener('scan', function (content) {
+      qrDataInput.value = content;
+    });
+
+    Instascan.Camera.getCameras()
+      .then(cameras => {
+        if (cameras.length > 0) {
+          const selectedCamera = cameras[0];
+          scanner.start(selectedCamera);
+        } else {
+          console.error('No cameras found.');
+        }
+      })
+      .catch(error => {
+        console.error('Error accessing the camera:', error);
+      });
+  </script>
+</body>
+</html>

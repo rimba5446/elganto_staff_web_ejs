@@ -1,0 +1,46 @@
+<!-- views/scanQRCode.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scan QR Code</title>
+</head>
+<body>
+  <h1>Scan QR Code</h1>
+  <video id="scanner" autoplay></video>
+  <script src="/instascan.min.js"></script>
+  <script>
+    const scanner = new Instascan.Scanner({ video: document.getElementById('scanner') });
+
+    scanner.addListener('scan', function (content) {
+      // Kirim data QR Code yang dipindai ke server untuk validasi
+      fetch('/validateQRCode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ qrData: content, visitorCount: 1 }), // Ganti visitorCount sesuai kebutuhan
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.valid) {
+            // Redirect ke halaman sukses validasi
+            window.location.href = '/validationSuccess';
+          } else {
+            // Tampilkan pesan validasi gagal
+            alert('Validasi QR Code gagal');
+          }
+        });
+    });
+
+    Instascan.Camera.getCameras()
+      .then(cameras => {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      })
+      .catch(error => console.error(error));
+  </script>
+</body>
+</html>

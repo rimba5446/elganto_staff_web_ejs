@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Staff</title>
+</head>
+<body>
+  <h1>Data Staff</h1>
+  <p><strong><%= data.message %></strong></p>
+  <table>
+    <tr>
+      <th>Owner ID</th>
+      <th>Owner Name</th>
+      <th>Profile Picture</th>
+      <th>Staff Name</th>
+      <th>Action</th>
+    </tr>
+    <% data.staffPasscodes.forEach(function(staff) { %>
+      <tr>
+        <td><%= staff.OwnerId %></td>
+        <td><%= staff.OwnerName %></td>
+        <td><img src="<%= staff.PicUrl %>" alt="<%= staff.StaffName %>"></td>
+        <td><%= staff.StaffName %></td>
+        <td>
+          <a href="/validateQRCode">Scan</a> <!-- Tautan ke halaman validateQRCode -->
+        </td>
+      </tr>
+    <% }); %>
+  </table>
+</body>
+</html>
